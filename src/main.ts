@@ -10,6 +10,8 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Entity, PrimaryGeneratedColumn, Column, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 /* ================== ENTITY ================== */
 
@@ -56,16 +58,16 @@ class AuthController {
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'ERP_SECRET',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'Test123#',
-      database: 'erp',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [User],
       synchronize: true, // auto-create users table
     }),
@@ -80,8 +82,8 @@ class AppModule {}
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  await app.listen(3001);
-  console.log('Auth service running on port 3001');
+  await app.listen(process.env.PORT);
+  console.log(`Auth service running on port ${process.env.PORT}`);
 }
 
 bootstrap();
