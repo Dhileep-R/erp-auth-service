@@ -11,7 +11,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Entity, PrimaryGeneratedColumn, Column, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 /* ================== ENTITY ================== */
 
